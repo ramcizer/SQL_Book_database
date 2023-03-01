@@ -335,7 +335,7 @@ def enter_new_book(cursor, db, books):
 # This initiates the program upon starting and setting the two most important variables
 db, cursor = database_contact()
 
-print('''\nDear Mentor, option 1 is only to get started, if you choose it twice it will double up on the data\n
+print('''\nDear Mentor / User, option 1 is only to get started, if you choose it twice it will double up on the data\n
             I added a small amount of functionality...''')
 
 # The user is presented with their choices upon running the programme. 
