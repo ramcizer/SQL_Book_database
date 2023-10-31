@@ -1,4 +1,4 @@
-# the module is imported
+# the libary is imported
 # The programme makes use of sql. 
 import sqlite3
 
@@ -13,6 +13,7 @@ def database_contact():
 
         # The table columns are set using .execute. 
         # As per the Task pdf the correct formatting is used. 
+        # The database is created if it doesn't already exist. 
         # I've added IF NOT EXISTS so there aren't any errors with the printing of results. 
         cursor.execute(''' CREATE TABLE IF NOT EXISTS bookstock (
             ID int(4) UNIQUE,
@@ -27,17 +28,22 @@ def database_contact():
     
     return db, cursor
 
-# This function is quite straightward, it adds the VALUES, so the book details as a bookstock table. 
+# This function is quite straightward, it adds the VALUES, - the book details - as a bookstock table. 
 # The cursor variable is initiated at the start of the programme and is important for the function
 # The starting stock is loaded and committed to the database
 def load_starting_stock(cursor):
 
-    cursor.execute('''INSERT INTO bookstock
-    VALUES  (3001, "The Tale of Two Cities", "Charles Dickens", 30),
-            (3002, "Harry Potter and the Philosophers Stone", "J K Rowling", 40),
-            (3003, "The Lion, The Witch, and the Wardrobe", "C S Lewis", 25), 
-            (3004, "The Lord of the Rings", "JR R Tolkein", 37),
-            (3005, "Alice in Wonderland", "Lewis Carrol", 12)''')
+    try: 
+        cursor.execute('''INSERT INTO bookstock
+        VALUES  (3001, "The Tale of Two Cities", "Charles Dickens", 30),
+                (3002, "Harry Potter and the Philosophers Stone", "J K Rowling", 40),
+                (3003, "The Lion, The Witch, and the Wardrobe", "C S Lewis", 25), 
+                (3004, "The Lord of the Rings", "JR R Tolkein", 37),
+                (3005, "Alice in Wonderland", "Lewis Carrol", 12)''')
+        print("\nThat's been executed")
+    except sqlite3.IntegrityError: 
+        print('At least one of the codes of the book you are trying to enter aleady exists.')
+        print('\nAre you sure that the initial stock isnt loaded?')
     
     #The results are committed so if you re-run the program the details are still there. 
     db.commit()
@@ -74,7 +80,7 @@ def search_books_by(cursor):
         # Some more defensive programming to assure against errors or bad entries. 
         try: 
 
-            search_choice = int(input('''How would you like to search for the book(s)
+            search_choice = int(input('''How would you like to search and delete the book(s)
                                 (1) By book ID
                                 (2) By book title
                                 (3) By author
@@ -335,8 +341,6 @@ def enter_new_book(cursor, db, books):
 # This initiates the program upon starting and setting the two most important variables
 db, cursor = database_contact()
 
-print('''\nDear Mentor / User, option 1 is only to get started, if you choose it twice it will double up on the data\n
-            I added a small amount of functionality...''')
 
 # The user is presented with their choices upon running the programme. 
 while True:
@@ -346,7 +350,7 @@ while True:
                             (1) To load the starting stock
                             (2) To enter a new book into stock
                             (3) To update a book in stock
-                            (4) To delete a book from stock
+                            (4) To delete book(s) from stock
                             (5) To search all books
                             (6) To view a list of all books in stock
                             (0) Exit
@@ -356,8 +360,7 @@ while True:
         # There are the user's starting options. 
         # The functions are made use of. 
         if user_choice == 1:
-            load_starting_stock(cursor)
-            print("\nThat's been executed")
+            load_starting_stock(cursor)            
         elif user_choice == 2:
             books = all_books(cursor)
             enter_new_book(cursor, db, books)
@@ -390,5 +393,4 @@ while True:
 
 
 # I tried to be as modular as possible with this and enjoyed adding functionality for current and future use. 
-# Of course, I also used sql
-# Code ends. 
+# Code ends. I ennjoyed adding functionality for current and future use. 
